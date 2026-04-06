@@ -1,0 +1,200 @@
+schema_version: "1"
+contract_id: terramark-antecipagov-financial-motor-field-registry-v1
+status: DRAFT_LOCK_CANDIDATE
+visibility: secret_free
+source_type: user_supplied_runtime_analysis
+writer_of_record: odoo14_prod
+projection_layers:
+  - antecipagov.terramark.org
+  - terramark.org/app/v1/antecipagov
+  - Prometheus-Systems-ORG/company
+core_naming:
+  canonical_core: FinancialMotor
+  operational_product: AntecipaGov
+  public_expression: TerraMark
+
+entities:
+  - GovLead
+  - GovCommitment
+  - ReceivableOrder
+  - ReceivableLine
+  - FinancialBlock
+  - FinancialMotor
+  - RWAPool
+  - TokenSeries
+  - InvoiceEvent
+  - PaymentEvent
+
+field_registry:
+  crm_lead:
+    observed_or_required:
+      - field_key: lead_pkurl
+        ui_label: PKURL
+        type_probable: char
+        certainty: high
+        role: commercial_origin_natural_key
+      - field_key: pncp_id
+        ui_label: ID PNCP
+        type_probable: char
+        certainty: high
+        role: procurement_source_identifier
+      - field_key: stakeholder_partner_ids
+        ui_label: Parceiros_Stakeholders
+        type_probable: many2many_res_partner
+        certainty: high
+        role: actor_graph
+      - field_key: block_preclassification_code
+        ui_label: null
+        type_probable: char
+        certainty: medium
+        role: preclassification_for_financial_grouping
+      - field_key: motor_preclassification_code
+        ui_label: null
+        type_probable: char
+        certainty: medium
+        role: preclassification_for_financial_engine
+
+  sale_order:
+    observed_or_required:
+      - field_key: numero_empenho
+        ui_label: Numero Empenho
+        type_probable: char
+        certainty: high
+        role: government_commitment_anchor
+      - field_key: lead_pkurl
+        ui_label: PKURL Lead
+        type_probable: char_or_related
+        certainty: high
+        role: origin_reference
+      - field_key: blockchain_anchor
+        ui_label: Blockchain
+        type_probable: char
+        certainty: high
+        role: ledger_or_token_anchor
+      - field_key: block_display_name
+        ui_label: Bloco
+        type_probable: char_or_many2one_display
+        certainty: high
+        role: human_readable_financial_grouping
+      - field_key: block_id
+        ui_label: null
+        type_probable: many2one_financial_block
+        certainty: medium
+        role: normalized_grouping_fk
+      - field_key: motor_id
+        ui_label: null
+        type_probable: many2one_financial_motor
+        certainty: medium
+        role: normalized_engine_fk
+      - field_key: rwa_pool_code
+        ui_label: null
+        type_probable: char_or_many2one
+        certainty: medium
+        role: rwa_vehicle_grouping
+      - field_key: cluster_code
+        ui_label: null
+        type_probable: char_or_many2one
+        certainty: medium
+        role: commercial_or_geographic_cluster
+      - field_key: payment_status_ext
+        ui_label: Status Pagamento
+        type_probable: selection_or_computed
+        certainty: high
+        role: financial_state
+      - field_key: amount_paid
+        ui_label: Valor Pago
+        type_probable: monetary
+        certainty: high
+        role: cash_realized
+      - field_key: total_cost
+        ui_label: Custo Total
+        type_probable: monetary
+        certainty: high
+        role: cost_basis
+      - field_key: total_profit
+        ui_label: Lucro Total
+        type_probable: monetary
+        certainty: high
+        role: gross_profit
+      - field_key: margin_percent
+        ui_label: Margem (%)
+        type_probable: float
+        certainty: high
+        role: gross_margin_percent
+      - field_key: financial_total
+        ui_label: Total Financeiro
+        type_probable: monetary
+        certainty: medium
+        role: net_receivable_projection
+      - field_key: invoice_status_ext
+        ui_label: Situação da Fatura
+        type_probable: selection
+        certainty: high
+        role: invoiceability_state
+      - field_key: expected_receivable_date
+        ui_label: Data de entrega_or_financial_schedule
+        type_probable: date
+        certainty: medium
+        role: timeline_bucket_anchor
+
+  sale_order_line:
+    observed_or_required:
+      - field_key: supplier_id
+        ui_label: Fornecedor
+        type_probable: many2one_res_partner
+        certainty: medium
+        role: sourcing_anchor
+      - field_key: fiscal_quantity
+        ui_label: Quantidade Fiscal
+        type_probable: float
+        certainty: medium
+        role: fiscal_quantity_basis
+      - field_key: fiscal_price
+        ui_label: Preço Fiscal
+        type_probable: monetary
+        certainty: medium
+        role: fiscal_unit_basis
+      - field_key: cost_amount
+        ui_label: Custo
+        type_probable: monetary
+        certainty: high
+        role: line_cost_basis
+      - field_key: operation_code
+        ui_label: Operação
+        type_probable: many2one_or_selection
+        certainty: high
+        role: fiscal_operation_semantics
+      - field_key: cfop_code
+        ui_label: CFOP
+        type_probable: char_or_many2one
+        certainty: high
+        role: br_fiscal_classification
+      - field_key: icms_cst
+        ui_label: CST ICMS
+        type_probable: char_or_selection
+        certainty: high
+        role: br_tax_classification
+      - field_key: tax_benefit_code
+        ui_label: Tax Benefit
+        type_probable: char
+        certainty: medium
+        role: incentive_reference
+      - field_key: analytic_tag_ids
+        ui_label: Etiquetas Analíticas
+        type_probable: many2many_account_analytic_tag
+        certainty: high
+        role: cost_or_portfolio_tagging
+
+normalized_relations:
+  - GovLead generates many quotations_or_orders
+  - ReceivableOrder belongs_to one FinancialBlock
+  - FinancialBlock belongs_to one FinancialMotor
+  - FinancialMotor belongs_to one RWAPool
+  - ReceivableOrder emits InvoiceEvent
+  - ReceivableOrder emits PaymentEvent
+
+locking_rules:
+  - block_display_name is not a substitute for block_id
+  - motor semantics must not remain encoded only inside display labels like RWA-BITGOV-01 [MOTOR-01]
+  - blockchain_anchor meaning must be ratified before external tokenization logic depends on it
+  - Odoo remains operational writer; public apps act as read_compute_project layers until explicit governance changes
