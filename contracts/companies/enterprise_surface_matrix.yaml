@@ -1,0 +1,13 @@
+schema_version: "1"
+
+segments:
+  - segment_id: suite_consumer_ft
+    required_logical_services:
+      - dispatcher
+      - auth
+      - suite_api
+    migration_bundle_ref: ../../manifests/migration/prometheus-systems-via-hub.yaml
+  - segment_id: govtech_public
+    primary_surface: prometheus-systems-org-govtech
+  - segment_id: core_policy
+    primary_surface: prometheus-systems-org-core-ps

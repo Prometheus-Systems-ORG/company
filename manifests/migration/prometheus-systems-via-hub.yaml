@@ -1,0 +1,23 @@
+suite: federaltrading.org
+bundle_id: ft-migration-ps-via-hub-01
+assumption: Aggregated browser traffic may go to hub 121; dispatcher auth API behind.
+
+logical_services:
+  - service_id: dispatcher
+    ct: CT142
+    migration_demand_ids:
+      - HUB_DISPATCHER_ROUTES
+    status: pending_route_table
+  - service_id: auth
+    ct: CT144
+    migration_demand_ids:
+      - HUB_AUTH_SESSION
+    status: pending_flow_doc
+  - service_id: suite_api
+    ct: CT145
+    migration_demand_ids:
+      - HUB_REST_VERSIONED
+    status: pending_openapi
+
+notes:
+  - Do not fix CT142/144/145 IPs without infrastructure-truth evidence.

@@ -1,0 +1,27 @@
+schema_version: "1"
+brand: PROMETHEUS-SYSTEMS.ORG
+
+services:
+  dispatcher:
+    ct: CT142
+    responsibilities:
+      - route_aggregation
+      - upstream_selection
+    consumer_demands:
+      - HUB_DISPATCHER_ROUTES
+    status: pending_route_table
+  auth:
+    ct: CT144
+    responsibilities:
+      - session_establishment
+      - tenant_bridge
+    consumer_demands:
+      - HUB_AUTH_SESSION
+    status: pending_flow_doc
+  suite_api:
+    ct: CT145
+    responsibilities:
+      - versioned_rest_facade
+    consumer_demands:
+      - HUB_REST_VERSIONED
+    status: pending_openapi

@@ -1,0 +1,35 @@
+metadata:
+  suite: ps
+  artifact_id: ps-surface-lock-v1
+  lock_status: LOCKED
+  ratified_at: "2026-04-06T00:00:00Z"
+
+control_plane_surfaces:
+  - workload_id: CT142
+    vmid: 142
+    hostname: prometheus-systems-org-dispatcher-systems
+    hat: dispatcher_route_authority
+    logical_service_id: dispatcher
+  - workload_id: CT144
+    vmid: 144
+    hostname: prometheus-systems-org-auth
+    hat: auth_session_tenant_bridge
+    logical_service_id: auth
+  - workload_id: CT145
+    vmid: 145
+    hostname: prometheus-systems-org-api
+    hat: api_facade
+    logical_service_id: suite_api
+
+extended_surfaces:
+  - workload_id: CT130
+    vmid: 130
+    hostname: prometheus-systems-org-govtech
+    hat: govtech_surface
+  - workload_id: CT141
+    vmid: 141
+    hostname: prometheus-systems-org-core-ps
+    hat: core_policy_orchestration
+
+governance:
+  ip_pinning_note: Do not pin IPs until infrastructure-truth in canonical consumer repo.
