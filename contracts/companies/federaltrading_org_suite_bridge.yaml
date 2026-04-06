@@ -1,0 +1,29 @@
+schema_version: "1"
+bridge_id: ft-to-ps-company-bridge-v1
+source_suite: federaltrading.org
+target_repo: Prometheus-Systems-ORG/company
+lock_status: LOCKED_POINTERS_ONLY
+ratified_from_ft_commit: e8eba6c2af1a5d522c6db89a871484099bebd286
+
+upstream_ft_documents:
+  ssot_map: docs/architecture/prometheus_systems_ssot_map.md
+  runtime_surface_matrix: contracts/architecture/canonical/runtime_surface_matrix.yaml
+  runtime_reconciliation: contracts/architecture/canonical/runtime_reconciliation.yaml
+  dns_surface_crosswalk: contracts/architecture/canonical/dns_surface_crosswalk.yaml
+  pve_tags_inventory: contracts/architecture/canonical/pve_tags_canonical_node01.yaml
+  manifest_ref: manifests/ssot/environments.yaml
+
+prometheus_company_consumes:
+  logical_services:
+    - dispatcher
+    - auth
+    - suite_api
+  organizing_scope:
+    - companies
+    - apis
+    - migration_manifests
+
+rules:
+  - Never copy secrets or runtime credentials from FT.
+  - Mirror only secret-free, evidence-backed references.
+  - FT remains the active consumer-side canonical source for shared locked fields until superseded by evidence.
